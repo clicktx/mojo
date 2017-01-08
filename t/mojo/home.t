@@ -52,7 +52,6 @@ is_deeply path($home->to_string)->to_array, path->to_abs->to_array,
 # Path generation
 $home = Mojo::Home->new($FindBin::Bin);
 my $path = path($FindBin::Bin);
-is $home->lib_dir, $path->child('lib'), 'right path';
 is $home->rel_file('foo.txt'), $path->child('foo.txt'), 'right path';
 is $home->rel_file('foo/bar.txt'), $path->child('foo', 'bar.txt'), 'right path';
 

@@ -24,9 +24,10 @@ sub detect {
   return $self->parts(path->to_array);
 }
 
+# DEPRECATED!
 sub lib_dir {
-  my $path = path(@{shift->parts}, 'lib');
-  return -d $path ? $path->to_string : undef;
+  deprecated 'Mojo::Home::lib_dir is DEPRECATED';
+  path(@{shift->parts}, 'lib')->to_string;
 }
 
 # DEPRECATED!
@@ -71,7 +72,6 @@ Mojo::Home - Home sweet home
   # Find and manage the project root directory
   my $home = Mojo::Home->new;
   $home->detect;
-  say $home->lib_dir;
   say $home->rel_file('templates/layouts/default.html.ep');
   say "$home";
 
@@ -102,12 +102,6 @@ following new ones.
 
 Detect home directory from the value of the C<MOJO_HOME> environment variable,
 location of the application class, or the current working directory.
-
-=head2 lib_dir
-
-  my $path = $home->lib_dir;
-
-Path to C<lib> directory of application.
 
 =head2 mojo_lib_dir
 

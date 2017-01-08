@@ -9,4 +9,4 @@ plan skip_all => 'Test::Pod::Coverage 1.04+ required for this test!'
 
 # DEPRECATED!
 all_pod_coverage_ok(
-  {also_private => [qw(files is_status_class rel_dir slurp spurt)]});
+  {also_private => [qw(files is_status_class lib_dir rel_dir slurp spurt)]});
