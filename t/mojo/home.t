@@ -9,25 +9,44 @@ use Mojo::HelloWorld;
 use Mojo::Home;
 
 # ENV detection
-my $cwd = path->to_abs;
 {
-  local $ENV{MOJO_HOME} = '.';
+  my $fake = path->to_abs->child('does_not_exist');
+  local $ENV{MOJO_HOME} = $fake->to_string;
   my $home = Mojo::Home->new->detect;
-  is_deeply path($home->to_string)->to_abs->to_array, $cwd->to_array,
+  is_deeply path($home->to_string)->to_abs->to_array, $fake->to_array,
     'right path detected';
 }
 
 # Specific class detection
 {
-  local $INC{'MyClass.pm'} = 'MyClass.pm';
-  my $home = Mojo::Home->new->detect('MyClass');
-  is_deeply path($home->to_string)->to_abs->to_array, $cwd->to_array,
+  my $fake = path->to_abs->child('does_not_exist_2');
+  local $INC{'My/Class.pm'} = $fake->child('My', 'Class.pm');
+  my $home = Mojo::Home->new->detect('My::Class');
+  is_deeply path($home->to_string)->to_abs->to_array, $fake->to_array,
+    'right path detected';
+}
+
+# Specific class detection (with "lib")
+{
+  my $fake = path->to_abs->child('does_not_exist_3');
+  local $INC{'My/Class.pm'} = $fake->child('lib', 'My', 'Class.pm');
+  my $home = Mojo::Home->new->detect('My::Class');
+  is_deeply path($home->to_string)->to_abs->to_array, $fake->to_array,
+    'right path detected';
+}
+
+# Specific class detection (with "blib")
+{
+  my $fake = path->to_abs->child('does_not_exist_3');
+  local $INC{'My/Class.pm'} = $fake->child('blib', 'My', 'Class.pm');
+  my $home = Mojo::Home->new->detect('My::Class');
+  is_deeply path($home->to_string)->to_abs->to_array, $fake->to_array,
     'right path detected';
 }
 
 # Current working directory
 my $home = Mojo::Home->new->detect;
-is_deeply path($home->to_string)->to_array, $cwd->to_array,
+is_deeply path($home->to_string)->to_array, path->to_abs->to_array,
   'right path detected';
 
 # Path generation

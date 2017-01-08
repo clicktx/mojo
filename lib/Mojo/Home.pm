@@ -2,9 +2,8 @@ package Mojo::Home;
 use Mojo::Base -base;
 use overload bool => sub {1}, '""' => sub { shift->to_string }, fallback => 1;
 
-use Mojo::Util qw(class_to_path deprecated);
 use Mojo::File 'path';
-use Mojo::Util 'class_to_path';
+use Mojo::Util qw(class_to_path deprecated);
 
 has parts => sub { [] };
 
@@ -17,14 +16,8 @@ sub detect {
 
   # Location of the application class
   if ($class && (my $path = $INC{my $file = class_to_path $class})) {
-    $path =~ s/\Q$file\E$//;
-    my @home = @{path($path)};
-
-    # Remove "lib" and "blib"
-    pop @home while @home && ($home[-1] =~ /^b?lib$/ || !length $home[-1]);
-
-    # Turn into absolute path
-    return $self->parts(path(@home)->to_abs->to_array);
+    $path =~ s/(?:\/b?lib)?\/\Q$file\E$//;
+    return $self->parts(path($path)->to_abs->to_array);
   }
 
   # Current working directory

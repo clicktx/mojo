@@ -522,7 +522,7 @@ Convert a class name to a file.
 
   my $path = class_to_path 'Foo::Bar';
 
-Convert class name to path.
+Convert class name to path, as used by C<%INC>.
 
   # "Foo/Bar.pm"
   class_to_path 'Foo::Bar';
